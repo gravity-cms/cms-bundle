@@ -27,6 +27,7 @@ class GravityCmsExtension extends Extension
 
         $container->setParameter('gravity_cms.node_types', $config['node_types']);
         $container->setParameter('gravity_cms.user_entity', $config['user_entity']);
+        $container->setParameter('gravity_cms.site_config', $config['site']);
 
         $this->processGravityConfiguration($config, $container);
 

@@ -1,0 +1,19 @@
+{% extends 'GravityCmsBundle::frontend.html.twig' %}
+
+{% block title %}{{ page_title }}{% endblock title %}
+
+{% block page_title %}{{ page_title }}{% endblock %}
+{% block page_subtitle %} {% endblock %}
+
+{% block content %}
+    <h1>{{ page_title }}</h1>
+    <p>
+        {{ nodes|length }} Found
+    </p>
+
+    <ul>
+        {% for node in nodes %}
+            <li><a href="{{ url(node.route.name) }}">{{ node.title }}</a></li>
+        {% endfor %}
+    </ul>
+{% endblock content %}

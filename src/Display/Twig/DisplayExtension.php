@@ -68,7 +68,7 @@ class DisplayExtension extends \Twig_Extension
     public function renderFieldDisplay(\Twig_Environment $environment, FieldableEntity $entity, $field)
     {
         $class          = get_class($entity);
-        $displayMapping = $this->displayManager->getNodeConfig($class);
+        $displayMapping = $this->displayManager->getEntityConfig($class);
         $fieldSettings  = $this->fieldManager->getEntityFieldMapping($class);
 
         $html = '';

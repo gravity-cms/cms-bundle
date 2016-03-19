@@ -1,6 +1,5 @@
 <?php
 
-
 namespace Gravity\CmsBundle\Entity;
 
 use Symfony\Cmf\Bundle\RoutingBundle\Doctrine\Orm\Route;
@@ -76,22 +75,6 @@ abstract class Node extends FieldableEntity
     }
 
     /**
-     * @return string
-     */
-    public function getPath()
-    {
-        return $this->path;
-    }
-
-    /**
-     * @param string $path
-     */
-    public function setPath($path)
-    {
-        $this->path = $path;
-    }
-
-    /**
      * @return boolean
      */
     public function isPublished()
@@ -153,21 +136,5 @@ abstract class Node extends FieldableEntity
     public function setPublishedBy($publishedBy)
     {
         $this->publishedBy = $publishedBy;
-    }
-
-    /**
-     * @param Route $route
-     */
-    public function setRoute(Route $route)
-    {
-        $this->route = $route;
-    }
-
-    /**
-     * @return Route
-     */
-    public function getRoute()
-    {
-        return $this->route;
     }
 }

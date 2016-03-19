@@ -5,17 +5,9 @@
 
     <mapped-superclass name="Gravity\CmsBundle\Entity\Node">
         <field name="title" type="string" length="255"/>
-        <field name="path" type="string" column="path" length="2048" nullable="true"/>
         <field name="published" type="boolean"/>
         <field name="publishedFrom" type="datetime" column="published_from" nullable="true"/>
         <field name="publishedTo" type="datetime" column="published_to" nullable="true"/>
-
-
-        <many-to-one target-entity="Symfony\Cmf\Bundle\RoutingBundle\Doctrine\Orm\Route" field="route">
-            <cascade>
-                <cascade-persist />
-            </cascade>
-        </many-to-one>
     </mapped-superclass>
 
 </doctrine-mapping>

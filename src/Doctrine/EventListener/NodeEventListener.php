@@ -8,9 +8,7 @@ use Doctrine\ORM\Event\LifecycleEventArgs;
 use Doctrine\ORM\Event\OnFlushEventArgs;
 use Doctrine\ORM\Events;
 use Doctrine\ORM\UnitOfWork;
-use Gedmo\SoftDeleteable\SoftDeleteableListener;
 use Gravity\CmsBundle\Entity\FieldableEntity;
-use Gravity\CmsBundle\Entity\Node;
 use Gravity\CmsBundle\Routing\RouteBuilder;
 use Symfony\Cmf\Bundle\RoutingBundle\Doctrine\Orm\Route;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
@@ -35,7 +33,7 @@ class NodeEventListener implements EventSubscriber
 
     /**
      * @param TokenStorageInterface $tokenStorage
-     * @param RouteBuilder          $routeBuilder
+     * @param RouteBuilder $routeBuilder
      */
     function __construct(TokenStorageInterface $tokenStorage, RouteBuilder $routeBuilder)
     {
@@ -58,7 +56,7 @@ class NodeEventListener implements EventSubscriber
 
     public function onFlush(OnFlushEventArgs $args)
     {
-        $em  = $args->getEntityManager();
+        $em = $args->getEntityManager();
         $uow = $em->getUnitOfWork();
 
         // update any routes
@@ -78,10 +76,10 @@ class NodeEventListener implements EventSubscriber
     public function postPersist(LifecycleEventArgs $args)
     {
         $entity = $args->getEntity();
-        $em     = $args->getEntityManager();
-        if ($entity instanceof Node) {
-            if(!$entity->getRoute() instanceof Route){
-                $route = $this->getNodeRoute($entity);
+        $em = $args->getEntityManager();
+        if ($entity instanceof FieldableEntity) {
+            if (!$entity->getRoute() instanceof Route) {
+                $route = $this->getEntityRoute($entity);
                 $entity->setRoute($route);
                 $em->flush();
             }
@@ -113,13 +111,13 @@ class NodeEventListener implements EventSubscriber
     public function postRemove(LifecycleEventArgs $args)
     {
         $entity = $args->getEntity();
-        $em     = $args->getEntityManager();
+        $em = $args->getEntityManager();
 
-        if ($entity instanceof Node) {
+        if ($entity instanceof FieldableEntity) {
             $route = $entity->getRoute();
 
             if (!$route instanceof Route) {
-                $route = $this->getNodeRoute($entity);  // make a new route
+                $route = $this->getEntityRoute($entity);  // make a new route
                 $this->deletedRoute($route);            // 410 the new route
 
                 $entity->setRoute($route);
@@ -136,15 +134,15 @@ class NodeEventListener implements EventSubscriber
     public function postSoftDelete(LifecycleEventArgs $args)
     {
         $entity = $args->getEntity();
-        $em     = $args->getEntityManager();
-        $uow    = $em->getUnitOfWork();
+        $em = $args->getEntityManager();
+        $uow = $em->getUnitOfWork();
 
-        if ($entity instanceof Node) {
+        if ($entity instanceof FieldableEntity) {
             if ($entity->getDeletedOn() instanceof \DateTime) {
                 $route = $entity->getRoute();
 
                 if (!$route instanceof Route) {
-                    $route = $this->getNodeRoute($entity);  // make a new route
+                    $route = $this->getEntityRoute($entity);  // make a new route
                     $this->deletedRoute($route);            // 410 the new route
 
                     $entity->setRoute($route);
@@ -154,7 +152,7 @@ class NodeEventListener implements EventSubscriber
                     $uow->scheduleExtraUpdate(
                         $entity,
                         [
-                            'route' => [null, $route]
+                            'route' => [null, $route],
                         ]
                     );
                 } else {
@@ -172,13 +170,13 @@ class NodeEventListener implements EventSubscriber
      * Schedule updates for routing
      *
      * @param EntityManager $em
-     * @param UnitOfWork    $uow
+     * @param UnitOfWork $uow
      */
     protected function updateRouting(EntityManager $em, UnitOfWork $uow)
     {
         // 302 old routes to the new 200
         foreach ($uow->getScheduledEntityUpdates() as $entity) {
-            if ($entity instanceof Node) {
+            if ($entity instanceof FieldableEntity) {
                 $changeSet = $uow->getEntityChangeSet($entity);
 
                 $oldRoute = $entity->getRoute();
@@ -186,7 +184,7 @@ class NodeEventListener implements EventSubscriber
                 // Check if we have a route. If not, create one and continue
                 if (!$oldRoute instanceof Route) {
                     // create the new route
-                    $oldRoute = $this->getNodeRoute($entity);
+                    $oldRoute = $this->getEntityRoute($entity);
 
                     $entity->setRoute($oldRoute);
                     $this->computeChangeSet($em, $oldRoute);
@@ -194,7 +192,7 @@ class NodeEventListener implements EventSubscriber
                 }
 
                 // Check if the route has been manually updated
-                $newRoute = $this->getNodeRoute($entity);
+                $newRoute = $this->getEntityRoute($entity);
 
                 // if the route changed, update it
                 if ($newRoute->getPath() !== $oldRoute->getPath()) {
@@ -214,7 +212,7 @@ class NodeEventListener implements EventSubscriber
                         $this->recomputeSingleEntityChangeSet($em, $oldRoute);
                     } else {
                         // un-delete
-                        $newRoute = $this->getNodeRoute($entity);
+                        $newRoute = $this->getEntityRoute($entity);
                         $entity->setRoute($newRoute);
                         $uow->scheduleForDelete($oldRoute);
 
@@ -230,21 +228,21 @@ class NodeEventListener implements EventSubscriber
     }
 
     /**
-     * Create a 200 route for a new Node
+     * Create a 200 route for a new FieldableEntity
      *
-     * @param Node $node
+     * @param FieldableEntity $entity
      *
      * @return Route
      */
-    protected function getNodeRoute(Node $node)
+    protected function getEntityRoute(FieldableEntity $entity)
     {
-        return $this->routeBuilder->build($node);
+        return $this->routeBuilder->build($entity);
     }
 
     /**
      * Redirect a route to a new url
      *
-     * @param Route  $route
+     * @param Route $route
      *
      * @return \Symfony\Component\Routing\Route
      */
@@ -271,7 +269,7 @@ class NodeEventListener implements EventSubscriber
      * Compute the changeset of a new entity
      *
      * @param EntityManager $em
-     * @param object        $entity
+     * @param object $entity
      */
     protected function computeChangeSet(EntityManager $em, $entity)
     {
@@ -283,7 +281,7 @@ class NodeEventListener implements EventSubscriber
      * Compute the change set for an existing single entity
      *
      * @param EntityManager $em
-     * @param object        $entity
+     * @param object $entity
      */
     protected function recomputeSingleEntityChangeSet(EntityManager $em, $entity)
     {

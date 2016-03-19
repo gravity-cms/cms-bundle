@@ -25,13 +25,13 @@ class NodeController extends Controller
         $node = $em->getRepository($type)->findOneBy(
             [
                 'id'        => $nodeId,
-                'published' => true,
+//                'published' => true,
                 'deletedOn' => null
             ]
         );
 
         if (!$node instanceof $type) {
-            throw $this->createNotFoundException("Node '{$nodeId}' not found for type '{$type}'");
+            throw $this->createNotFoundException("Entity '{$nodeId}' not found for type '{$type}'");
         }
 
         $adminPool   = $this->get('sonata.admin.pool');
@@ -43,14 +43,14 @@ class NodeController extends Controller
         if ($format === 'html') {
             $displayHandlerManager = $this->get('gravity_cms.display_manager');
 
-            $handler = $displayHandlerManager->getHandlerForNode($node);
+            $handler = $displayHandlerManager->getHandlerForEntity($node);
 
             if ($handler->supportsRequest($request)) {
                 return $this->render(
                     $handler->getTemplate(),
                     $handler->getTemplateOptions(
                         $node,
-                        $displayHandlerManager->getNodeConfig($entityClass)['options']
+                        $displayHandlerManager->getEntityConfig($entityClass)['options']
                     ) + [
                         'admin' => $admin,
                     ]

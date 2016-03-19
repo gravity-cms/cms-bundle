@@ -2,7 +2,7 @@
 
 namespace Gravity\CmsBundle\Display\Handler;
 
-use Gravity\CmsBundle\Entity\Node;
+use Gravity\CmsBundle\Entity\FieldableEntity;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
@@ -28,7 +28,7 @@ class FieldHandler implements DisplayHandlerInterface
     {
         $optionsResolver->setDefaults(
             [
-                'fields'       => [],
+                'fields' => [],
             ]
         )
             ->setAllowedTypes('fields', 'array');
@@ -53,10 +53,10 @@ class FieldHandler implements DisplayHandlerInterface
     /**
      * @inheritDoc
      */
-    public function getTemplateOptions(Node $node, array $options = [])
+    public function getTemplateOptions(FieldableEntity $fieldableEntity, array $options = [])
     {
         return [
-            'node'             => $node,
+            'node'             => $fieldableEntity,
             'display_mappings' => $options['fields'],
         ];
     }

@@ -4,8 +4,10 @@
 namespace Gravity\CmsBundle\Routing;
 
 use Cocur\Slugify\SlugifyInterface;
+use Gravity\CmsBundle\Entity\FieldableEntity;
 use Gravity\CmsBundle\Entity\Node;
 use Gravity\CmsBundle\Field\FieldManager;
+use Gravity\CmsBundle\Field\Mapping\Field;
 use Symfony\Cmf\Bundle\RoutingBundle\Doctrine\Orm\Route;
 use Symfony\Component\Routing\Exception\ResourceNotFoundException;
 use Symfony\Component\Routing\Generator\UrlGenerator;
@@ -81,19 +83,19 @@ class RouteBuilder
     }
 
     /**
-     * @param Node $node
+     * @param FieldableEntity $entity
      * @param bool $nonConflict
      *
      * @return Route
      */
-    public function build(Node $node, $nonConflict = true)
+    public function build(FieldableEntity $entity, $nonConflict = true)
     {
-        $class        = get_class($node);
+        $class        = get_class($entity);
         $routeMapping = $this->nodeRouteManager->getNodeMapping($class);
         $router       = $this->nodeRouteManager->getRouter();
         $i            = 0;
         $path         = null;
-        $fullPath     = $node->getPath();
+        $fullPath     = $entity->getPath();
 
         $route = new Route();
         $route->setVariablePattern("");
@@ -120,7 +122,7 @@ class RouteBuilder
             $params = [];
             foreach ($urlVars as $vi => $var) {
                 $method = new \ReflectionMethod($class, "get{$var}");
-                $value  = (string) $method->invoke($node);
+                $value  = (string) $method->invoke($entity);
                 //
                 if ($i > 0 && $urlVarCount == $vi) {
                     $value .= " {$i}";
@@ -148,7 +150,7 @@ class RouteBuilder
                 // if we've fallen back to the original route, stop searching for an existing route, or if we've found
                 // the node's route
                 if (isset($match['nodeId'])) {
-                    if ($match['nodeId'] != $node->getId()) {
+                    if ($match['nodeId'] != $entity->getId()) {
                         continue;
                     } else {
                         break;
@@ -167,7 +169,7 @@ class RouteBuilder
             [
                 '_format'     => 'html',
                 '_controller' => 'Gravity\CmsBundle\Controller\NodeController::viewAction',
-                'nodeId'      => $node->getId(),
+                'nodeId'      => $entity->getId(),
                 'type'        => $class,
             ]
         );
@@ -178,7 +180,7 @@ class RouteBuilder
         $route->setStaticPrefix($path);
         $route->setPath($path);
 
-        $node->setPath($path);
+        $entity->setPath($path);
 
         return $route;
     }

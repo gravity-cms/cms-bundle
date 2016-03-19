@@ -3,6 +3,7 @@
 
 namespace Gravity\CmsBundle\Entity;
 
+use Symfony\Cmf\Bundle\RoutingBundle\Doctrine\Orm\Route;
 use Symfony\Component\Security\Core\User\UserInterface;
 
 /**
@@ -47,6 +48,16 @@ class FieldableEntity
      * @var UserInterface
      */
     protected $deletedBy;
+
+    /**
+     * @var Route
+     */
+    protected $route;
+
+    /**
+     * @var string
+     */
+    protected $path;
 
     /**
      * @return int
@@ -150,5 +161,37 @@ class FieldableEntity
     public function setDeletedBy($deletedBy)
     {
         $this->deletedBy = $deletedBy;
+    }
+
+    /**
+     * @return Route
+     */
+    public function getRoute()
+    {
+        return $this->route;
+    }
+
+    /**
+     * @param Route $route
+     */
+    public function setRoute(Route $route)
+    {
+        $this->route = $route;
+    }
+
+    /**
+     * @return string
+     */
+    public function getPath()
+    {
+        return $this->path;
+    }
+
+    /**
+     * @param string $path
+     */
+    public function setPath($path)
+    {
+        $this->path = $path;
     }
 }

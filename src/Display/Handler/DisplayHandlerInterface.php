@@ -3,7 +3,7 @@
 
 namespace Gravity\CmsBundle\Display\Handler;
 
-use Gravity\CmsBundle\Entity\Node;
+use Gravity\CmsBundle\Entity\FieldableEntity;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
@@ -21,7 +21,7 @@ interface DisplayHandlerInterface
 
     /**
      * @param OptionsResolver $optionsResolver
-     * @param array           $options
+     * @param array $options
      *
      * @return void
      */
@@ -40,10 +40,10 @@ interface DisplayHandlerInterface
     public function getTemplate();
 
     /**
-     * @param Node  $node
+     * @param FieldableEntity $entity
      * @param array $options
      *
      * @return array
      */
-    public function getTemplateOptions(Node $node, array $options = []);
+    public function getTemplateOptions(FieldableEntity $entity, array $options = []);
 }

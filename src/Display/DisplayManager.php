@@ -5,7 +5,7 @@ namespace Gravity\CmsBundle\Display;
 
 use Gravity\CmsBundle\Display\Handler\DisplayHandlerInterface;
 use Gravity\CmsBundle\Display\Type\DisplayDefinitionInterface;
-use Gravity\CmsBundle\Entity\Node;
+use Gravity\CmsBundle\Entity\FieldableEntity;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
 /**
@@ -33,9 +33,9 @@ class DisplayManager
     /**
      * DisplayManager constructor.
      *
-     * @param DisplayHandlerInterface[]    $handlers
+     * @param DisplayHandlerInterface[] $handlers
      * @param DisplayDefinitionInterface[] $definitions
-     * @param array                        $config
+     * @param array $config
      */
     public function __construct(array $handlers, array $definitions, array $config)
     {
@@ -47,19 +47,19 @@ class DisplayManager
             $this->definitions[$definition->getName()] = $definition;
         }
 
-        $this->config      = $config;
+        $this->config = $config;
     }
 
     /**
-     * Get the display config for the node class
+     * Get the display config for the entity class
      *
-     * @param string $nodeClass
+     * @param string $entityClass
      *
      * @return array
      */
-    public function getNodeConfig($nodeClass)
+    public function getEntityConfig($entityClass)
     {
-        $config          = $this->config[$nodeClass];
+        $config = $this->config[$entityClass];
         $optionsResolver = new OptionsResolver();
         $handler = $this->handlers[$config['handler']];
         $handler->setOptions($optionsResolver, $config['options']);
@@ -71,15 +71,15 @@ class DisplayManager
 
     /**
      * @param DisplayHandlerInterface $handler
-     * @param Node                    $node
+     * @param FieldableEntity $fieldableEntity
      *
-     * @deprecated use DisplayManager::getNodeConfig
+     * @deprecated use DisplayManager::getEntityConfig
      *
      * @return array
      */
-    public function getHandlerOptions(DisplayHandlerInterface $handler, Node $node)
+    public function getHandlerOptions(DisplayHandlerInterface $handler, FieldableEntity $fieldableEntity)
     {
-        $config          = $this->getNodeConfig(get_class($node));
+        $config = $this->getEntityConfig(get_class($fieldableEntity));
         $optionsResolver = new OptionsResolver();
         $handler->setOptions($optionsResolver, $config['options']);
 
@@ -105,13 +105,13 @@ class DisplayManager
     }
 
     /**
-     * @param Node $node
+     * @param FieldableEntity $entity
      *
      * @return DisplayHandlerInterface
      */
-    public function getHandlerForNode(Node $node)
+    public function getHandlerForEntity(FieldableEntity $entity)
     {
-        $config = $this->getNodeConfig(get_class($node));
+        $config = $this->getEntityConfig(get_class($entity));
 
         return $this->handlers[$config['handler']];
     }

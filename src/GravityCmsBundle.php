@@ -18,6 +18,7 @@ class GravityCmsBundle extends Bundle
      */
     public function build(ContainerBuilder $container)
     {
+        $container->addCompilerPass(new Compilers\SiteCompilerPass());
         $container->addCompilerPass(new Compilers\FieldCompilerPass());
         $container->addCompilerPass(new Compilers\SearchCompilerPass());
         $container->addCompilerPass(new Compilers\RoutingCompilerPass());

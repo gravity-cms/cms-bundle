@@ -71,8 +71,13 @@ class AbstractFieldableAdmin extends Admin
     {
         $formMapper
             ->with('Content', ['class' => 'col-md-9'])->end()
-            ->with('Publishing', ['class' => 'col-md-3'])->end()
-            ->with('Routing', ['class' => 'col-md-3'])->end();
+            ->with('Publishing', ['class' => 'col-md-3'])
+            ->end()
+            ->with('Routing', ['class' => 'col-md-3'])
+                ->add('path', 'text', [
+                    'required' => false,
+                ])
+            ->end();
 
         $fieldMappings = $this->fieldManager->getEntityFieldMapping($this->getClass());
 

@@ -15,6 +15,14 @@
         <!-- createdBy -->
         <field name="deletedOn" type="datetime" column="deleted_on" nullable="true"/>
         <!-- deletedBy -->
+
+        <field name="path" type="string" column="path" length="2048" nullable="true"/>
+
+        <many-to-one target-entity="Symfony\Cmf\Bundle\RoutingBundle\Doctrine\Orm\Route" field="route">
+            <cascade>
+                <cascade-persist />
+            </cascade>
+        </many-to-one>
     </mapped-superclass>
 
 </doctrine-mapping>

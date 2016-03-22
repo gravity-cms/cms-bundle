@@ -45,7 +45,8 @@
 
     <!-- widget: sonata_formatter_type_widget -->
     <div class="sonata-formatter-widget"
-            data-config="{{ ckeditor_configuration|json_encode }}">
+         {# TODO: The replace filter is a hack to get the raw ckeditor config. The formatter needs to be overridden. #}
+         data-config="{{ ckeditor_replace('__ID__',ckeditor_configuration)|replace({'CKEDITOR.replace("__ID__", ':'', ');': ''})|e('html_attr') }}">
         <div style="margin-bottom: 5px;">
             {{ form_widget(form.children[format_field]) }}
             {% if format_field_options.choices|length > 1 %}

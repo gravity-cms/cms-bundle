@@ -29,8 +29,10 @@ class FieldHandler implements DisplayHandlerInterface
         $optionsResolver->setDefaults(
             [
                 'fields' => [],
+                'template' => 'GravityCmsBundle:Node:view.html.twig',
             ]
         )
+
             ->setAllowedTypes('fields', 'array');
     }
 
@@ -45,9 +47,9 @@ class FieldHandler implements DisplayHandlerInterface
     /**
      * @inheritDoc
      */
-    public function getTemplate()
+    public function getTemplate(array $options = [])
     {
-        return 'GravityCmsBundle:Node:view.html.twig';
+        return $options['template'];
     }
 
     /**

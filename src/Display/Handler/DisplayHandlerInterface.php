@@ -35,9 +35,10 @@ interface DisplayHandlerInterface
     public function supportsRequest(Request $request);
 
     /**
+     * @param array $options
      * @return string
      */
-    public function getTemplate();
+    public function getTemplate(array $options = []);
 
     /**
      * @param FieldableEntity $entity

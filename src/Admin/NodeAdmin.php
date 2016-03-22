@@ -63,8 +63,6 @@ class NodeAdmin extends AbstractFieldableAdmin
      */
     protected function configureFormFields(FormMapper $formMapper)
     {
-        parent::configureFormFields($formMapper);
-
         $formMapper->with('Content')
             ->add('title')
         ->end();
@@ -92,6 +90,8 @@ class NodeAdmin extends AbstractFieldableAdmin
                 ]
             )
         ->end();
+
+        parent::configureFormFields($formMapper);
     }
 
 

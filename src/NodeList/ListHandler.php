@@ -70,7 +70,7 @@ class ListHandler
     {
         $listHandler = new static($request->attributes->get('_entity'));
         $listHandler->setTitle($request->attributes->get('_title'));
-        $listHandler->setTemplate($request->attributes->get('_template', 'GravityCmsBundle:Node:list.html.twig'));
+        $listHandler->setTemplate($request->attributes->get('_list_template', 'GravityCmsBundle:Node:list.html.twig'));
         $listHandler->setPageSize($request->attributes->get('_page_size', 20));
         $listHandler->setPageNumber($request->query->get('page', 1));
 

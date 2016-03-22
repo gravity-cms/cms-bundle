@@ -46,11 +46,12 @@ class NodeController extends Controller
             $handler = $displayHandlerManager->getHandlerForEntity($node);
 
             if ($handler->supportsRequest($request)) {
+                $config = $displayHandlerManager->getEntityConfig($entityClass);
                 return $this->render(
-                    $handler->getTemplate(),
+                    $handler->getTemplate($config['options']),
                     $handler->getTemplateOptions(
                         $node,
-                        $displayHandlerManager->getEntityConfig($entityClass)['options']
+                        $config['options']
                     ) + [
                         'admin' => $admin,
                     ]

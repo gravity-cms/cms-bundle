@@ -25,15 +25,25 @@ class DisplayExtension extends \Twig_Extension
     protected $fieldManager;
 
     /**
+     * @var array
+     */
+    protected $javascripts = [];
+
+    /**
+     * @var array
+     */
+    protected $stylesheets = [];
+
+    /**
      * FieldExtension constructor.
      *
      * @param DisplayManager $displayManager
-     * @param FieldManager   $fieldManager
+     * @param FieldManager $fieldManager
      */
     public function __construct(DisplayManager $displayManager, FieldManager $fieldManager)
     {
         $this->displayManager = $displayManager;
-        $this->fieldManager   = $fieldManager;
+        $this->fieldManager = $fieldManager;
     }
 
     /**
@@ -54,22 +64,24 @@ class DisplayExtension extends \Twig_Extension
                 'render_field_display', [$this, 'renderFieldDisplay'],
                 ['is_safe' => ['html'], 'needs_environment' => true]
             ),
+            new \Twig_SimpleFunction('display_field_javascripts', [$this, 'getDisplayJavascripts']),
+            new \Twig_SimpleFunction('display_field_stylesheets', [$this, 'getDisplayStylesheets']),
         ];
     }
 
     /**
      * @param \Twig_Environment $environment
-     * @param FieldableEntity   $entity
-     * @param string            $field
+     * @param FieldableEntity $entity
+     * @param string $field
      *
      * @return string
      * @internal param \Twig_Environment $environment
      */
     public function renderFieldDisplay(\Twig_Environment $environment, FieldableEntity $entity, $field)
     {
-        $class          = get_class($entity);
+        $class = get_class($entity);
         $displayMapping = $this->displayManager->getEntityConfig($class);
-        $fieldSettings  = $this->fieldManager->getEntityFieldMapping($class);
+        $fieldSettings = $this->fieldManager->getEntityFieldMapping($class);
 
         $html = '';
 
@@ -80,9 +92,9 @@ class DisplayExtension extends \Twig_Extension
                     'label_inline' => false,
                     'options'      => [],
                 ];
-            $display              = $this->displayManager->getDisplayDefinition($displayFieldSettings['type']);
-            $fieldEntity          = call_user_func([$entity, 'get' . $field]);
-            $fieldDisplayOptions  = $displayFieldSettings['options'] ?: [];
+            $display = $this->displayManager->getDisplayDefinition($displayFieldSettings['type']);
+            $fieldEntity = call_user_func([$entity, 'get'.$field]);
+            $fieldDisplayOptions = $displayFieldSettings['options'] ?: [];
 
             $templateOptions = [
                 'entity'         => $fieldEntity,
@@ -97,7 +109,7 @@ class DisplayExtension extends \Twig_Extension
             if ($fieldSettings[$field]['options']['limit'] > 1) {
                 $subHtml = '';
 
-                $subTemplateOptions          = $templateOptions;
+                $subTemplateOptions = $templateOptions;
                 $subTemplateOptions['label'] = false;
                 foreach ($fieldEntity as $fieldEntityItem) {
                     $subHtml .= $environment->render(
@@ -108,7 +120,7 @@ class DisplayExtension extends \Twig_Extension
                 }
 
                 $templateOptions['rows'] = $subHtml;
-                $html                    = $environment->render(
+                $html = $environment->render(
                     $display->getListTemplate(),
                     $templateOptions +
                     $display->getListTemplateOptions($fieldEntity, $fieldDisplayOptions)
@@ -122,5 +134,41 @@ class DisplayExtension extends \Twig_Extension
         }
 
         return $html;
+    }
+
+    public function getDisplayJavascripts(FieldableEntity $entity)
+    {
+        $class = get_class($entity);
+        $displayMapping = $this->displayManager->getEntityConfig($class);
+
+        $javascripts = [];
+        foreach ($displayMapping['options']['fields'] as $fieldMapping) {
+            if(isset($fieldMapping['type'])) {
+                $display = $this->displayManager->getDisplayDefinition($fieldMapping['type']);
+                foreach ($display->getAssetLibraries() as $library) {
+                    $javascripts = array_merge($javascripts, $library->getJavascripts());
+                }
+            }
+        }
+
+        return $javascripts;
+    }
+
+    public function getDisplayStyleSheets(FieldableEntity $entity)
+    {
+        $class = get_class($entity);
+        $displayMapping = $this->displayManager->getEntityConfig($class);
+
+        $stylesheets = [];
+        foreach ($displayMapping['options']['fields'] as $field => $fieldMapping) {
+            if(isset($fieldMapping['type'])) {
+                $display = $this->displayManager->getDisplayDefinition($fieldMapping['type']);
+                foreach ($display->getAssetLibraries() as $library) {
+                    $stylesheets = array_merge($stylesheets, $library->getStylesheets());
+                }
+            }
+        }
+
+        return $stylesheets;
     }
 }

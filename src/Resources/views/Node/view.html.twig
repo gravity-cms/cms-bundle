@@ -2,6 +2,20 @@
 
 {% block title %}{{ node.title }}{% endblock title %}
 
+{% block stylesheets %}
+    {{ parent() }}
+    {% for stylesheet in display_field_stylesheets(node) %}
+        <link rel="stylesheet" href="{{ asset(stylesheet) }}"/>
+    {% endfor %}
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    {% for javascript in display_field_javascripts(node) %}
+        <script src="{{ asset(javascript) }}"></script>
+    {% endfor %}
+{% endblock %}
+
 {% block page_title %}{{ node.title }}{% endblock %}
 {% block page_subtitle %} {% endblock %}
 

@@ -13,11 +13,13 @@
 
     <title>{% block title %}{% endblock title %}</title>
 
-    {% stylesheets filter='compass'
-    '@GravityCmsBundle/Resources/assets/themes/gravity/sass/theme.scss'
-    %}
-    <link rel="stylesheet" href="{{ asset_url }}"/>
-    {% endstylesheets %}
+    {% block stylesheets %}
+        {% stylesheets filter='compass'
+        '@GravityCmsBundle/Resources/assets/themes/gravity/sass/theme.scss'
+        %}
+        <link rel="stylesheet" href="{{ asset_url }}"/>
+        {% endstylesheets %}
+    {% endblock stylesheets %}
 
     <!-- Custom Fonts -->
     <link href="http://maxcdn.bootstrapcdn.com/font-awesome/4.1.0/css/font-awesome.min.css" rel="stylesheet" type="text/css">
@@ -142,16 +144,15 @@
         </div>
     </div>
 </footer>
-
-
-{% javascripts
+{% block javascripts %}
+    {% javascripts
     '@GravityCmsBundle/Resources/assets/vendor/jquery/dist/jquery.min.js'
     '@GravityCmsBundle/Resources/assets/vendor/bootstrap-sass/assets/javascripts/bootstrap.min.js'
     '@GravityCmsBundle/Resources/assets/themes/gravity/js/blog.js'
-%}
-<script src="{{ asset_url }}"></script>
-{% endjavascripts %}
-
+    %}
+    <script src="{{ asset_url }}"></script>
+    {% endjavascripts %}
+{% endblock javascripts %}
 </body>
 
 </html>

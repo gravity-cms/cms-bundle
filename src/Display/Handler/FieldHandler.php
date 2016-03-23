@@ -28,11 +28,14 @@ class FieldHandler implements DisplayHandlerInterface
     {
         $optionsResolver->setDefaults(
             [
-                'fields' => [],
+                'fields'   => [
+                    'type'         => null,
+                    'label'        => true,
+                    'label_inline' => false,
+                ],
                 'template' => 'GravityCmsBundle:Node:view.html.twig',
             ]
         )
-
             ->setAllowedTypes('fields', 'array');
     }
 

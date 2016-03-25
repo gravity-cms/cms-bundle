@@ -1,0 +1,238 @@
+@import "compass/css3/box-shadow";
+
+.post {
+    width: 100%;
+    float: left;
+    @include box-shadow(rgba(0, 0, 0, 0.4) 0px 1px 3px);
+    background: #fff;
+    margin-bottom: 40px;
+    overflow: hidden;
+
+    > .post-image {
+        a {
+            display: block;
+        }
+    }
+
+    > .post-info {
+        padding: 15px;
+        text-align: left;
+        min-height: 60px;
+        border-bottom: 1px solid #ddd;
+        background: #fcfcfc;
+        float: left;
+        width: 100%;
+
+        > ul.list-inline {
+            margin: 0;
+
+            > li {
+                float: left;
+                border-left: 1px solid #ddd;
+                padding-left: 20px;
+                padding-right: 20px;
+
+                &:nth-child(3), &:nth-child(4) {
+                    display: none;
+                }
+
+                &:first-child {
+                    border-left: none;
+                    padding-left: 0;
+                }
+
+                > .icon-box {
+                    display: none;
+                }
+
+                > .info {
+                    float: left;
+                }
+
+                p {
+                    line-height: 16px;
+                    color: #3b4952;
+                    font-weight: 300;
+                    font-size: 14px;
+                    margin: 0;
+                }
+
+                a {
+                    color: #3b4952;
+                    font-weight: 700;
+                    font-size: 16px;
+                    line-height: 20px;
+                }
+            }
+        }
+    }
+
+    > .post-caption {
+        float: left;
+        width: 100%;
+        text-align: left;
+        padding: 25px 25px;
+
+        h3 {
+            margin: 0 0 20px 0;
+            color: #36a0e7;
+            font-weight: 300;
+            font-size: 34px;
+            line-height: 42px;
+        }
+
+        p {
+            line-height: 28px;
+            margin-bottom: 20px;
+            font-size: 16px;
+        }
+
+        > .post-category {
+            float: left;
+            width: 100%;
+            text-align: left;
+            margin-bottom: 20px;
+
+            > a {
+                margin: 0;
+                font-size: 18px;
+                font-weight: 300;
+                color: #3b4952;
+
+                > span {
+                    width: 12px;
+                    height: 12px;
+                    display: inline-block;
+                    background: #3b4952;
+                    vertical-align: middle;
+                    margin-right: 10px;
+                }
+            }
+        }
+
+        > ul.post-tags {
+            float: left;
+            width: 100%;
+            margin-bottom: 20px;
+            > li {
+                margin-bottom: 8px;
+                padding: 0 2px;
+
+                > a {
+                    display: block;
+                    background: #ebf1f4;
+                    font-size: 14px;
+                    font-weight: 300;
+                    border-radius: 3px;
+                    padding: 4px 8px;
+                    color: #3b4952;
+                }
+            }
+        }
+    }
+}
+
+@media (min-width: 400px) {
+
+    .post {
+        > .post-info {
+            padding: 10px;
+
+            > ul.list-inline {
+                > li {
+                    padding-left: 7px;
+                    padding-right: 7px;
+
+                    &:nth-child(3), &:nth-child(4) {
+                        display: block;
+                    }
+                }
+            }
+        }
+    }
+}
+
+@media (min-width: 480px) {
+    .post {
+        > .post-info {
+            > ul.list-inline {
+                > li {
+                    padding-left: 20px;
+                    padding-right: 20px;
+                }
+            }
+        }
+    }
+}
+
+@media (min-width: 768px) {
+    .post {
+        border-radius: 3px;
+
+        > .post-info {
+            padding: 10px;
+
+            > ul.list-inline {
+                margin: 0;
+
+                > li {
+
+                    > .icon-box {
+                        margin-right: 15px;
+                        width: 36px;
+                        text-align: center;
+                        line-height: 36px;
+                        font-size: 30px;
+                        height: 36px;
+                        float: left;
+                        background: transparent;
+                        color: #aebbc5;
+                        display: block;
+
+                        > img {
+                            border-radius: 3px;
+                            width: 100%;
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
+
+@media (min-width: 992px) {
+    .post {
+
+        > .post-info {
+            padding: 10px;
+
+            > ul.list-inline {
+
+                > li {
+                    padding-left: 10px;
+                    padding-right: 10px;
+                }
+            }
+        }
+    }
+}
+
+@media (min-width: 1050px) {
+    // ...
+}
+
+@media (min-width: 1200px) {
+    .post {
+
+        > .post-info {
+            padding: 15px;
+
+            > ul.list-inline {
+
+                > li {
+                    width: 25%;
+                }
+            }
+        }
+    }
+}
